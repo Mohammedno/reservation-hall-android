@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.booking.models.Reservation;
+import com.example.booking.models.Reserve;
 import com.example.booking.network.GetDataService;
 import com.example.booking.network.RetrofitClientInstance;
 
@@ -64,7 +65,7 @@ public class ReservationList extends AppCompatActivity {
 
         for(int i = 1; i < reservationList.size(); i++){
 
-            Reservation res = reservationList.get(i);
+           final Reservation res = reservationList.get(i);
             Log.d("Date", res.getDate() + " - " + res.getDinner() + " - " + res.getLunch());
 
 
@@ -90,8 +91,34 @@ public class ReservationList extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final TableRow parent = (TableRow) v.getParent();
-                        tableLayout.removeView(parent);
+                        // 1. Confirm button
+                        // 2. Request to the server to reserve this date
+                        Reserve reserve = new Reserve(res.getDate(), "lunch", "1");
+
+
+                        /*Create handle for the RetrofitInstance interface*/
+                        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+                        Call<List<Reservation>> call = service.reserve(res.getDate(), "dinner", "1");
+                        call.enqueue(new Callback<List<Reservation>>() {
+                            @Override
+                            public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
+//                progressDoalog.dismiss();
+
+                                Log.e("Result:", response.toString());
+
+                                //generateDataList(response.body());
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Reservation>> call, Throwable t) {
+//                progressDoalog.dismiss();
+                                Toast.makeText(ReservationList.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                                Log.d("Error:", t.getMessage());
+                                System.out.println(t.fillInStackTrace());
+
+                            }
+                        });
+
                     }
                 });
                 tableRow.addView(button);
@@ -108,13 +135,42 @@ public class ReservationList extends AppCompatActivity {
 
             if(res.getLunch().equals("No")){
                 final Button button = new Button(this);
+
                 button.setText("Reserve");
                 button.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final TableRow parent = (TableRow) v.getParent();
-                        tableLayout.removeView(parent);
+
+                        // 1. Confirm button
+                        // 2. Request to the server to reserve this date
+                        Reserve reserve = new Reserve(res.getDate(), "lunch", "1");
+
+
+                        /*Create handle for the RetrofitInstance interface*/
+                        GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+                        Call<List<Reservation>> call = service.reserve(res.getDate(), "lunch", "1");
+                        call.enqueue(new Callback<List<Reservation>>() {
+                            @Override
+                            public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
+//                progressDoalog.dismiss();
+
+                                Log.e("Result:", response.toString());
+
+                                //generateDataList(response.body());
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Reservation>> call, Throwable t) {
+//                progressDoalog.dismiss();
+                                Toast.makeText(ReservationList.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                                Log.d("Error:", t.getMessage());
+                                System.out.println(t.fillInStackTrace());
+
+                            }
+                        });
+
+                        // 3. Refresh the page
                     }
                 });
                 tableRow.addView(button);
