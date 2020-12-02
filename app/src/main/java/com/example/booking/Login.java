@@ -2,10 +2,14 @@ package com.example.booking;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -34,7 +38,7 @@ public class Login extends AppCompatActivity {
         textViewSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SignUp.class);
+                Intent intent = new Intent(getApplicationContext(), SignUp.class);
                 startActivity(intent);
                 finish();
             }
@@ -72,16 +76,29 @@ public class Login extends AppCompatActivity {
                                 if (putData.onComplete()) {
                                     progressBar.setVisibility(View.GONE);
                                     String result = putData.getResult();
-                                    if (result.equals("Login Success")){
+                                    Log.d("Login", "Login result:");
+
+                                    Log.d("Login",result.toString());
+
+                                    /*  SharedPreferences  */
+                                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("user", result);
+                                    editor.apply();
+                                    /*  ./SharedPreferences  */
+
+                                    Log.d("Login","Login result done");
+
+//                                    if (result.equals("Login Success")){
                                         Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                         startActivity(intent);
                                         finish();
 
-                                    }
-                                    else {
-                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                    }
+//                                    }
+//                                    else {
+//                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+//                                    }
                                     //End ProgressBar (Set visibility to GONE)
 
                                 }

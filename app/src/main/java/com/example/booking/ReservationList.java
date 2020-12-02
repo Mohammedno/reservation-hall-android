@@ -3,7 +3,9 @@ package com.example.booking;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +16,10 @@ import android.widget.Toast;
 
 import com.example.booking.models.Reservation;
 import com.example.booking.models.Reserve;
+import com.example.booking.models.User;
 import com.example.booking.network.GetDataService;
 import com.example.booking.network.RetrofitClientInstance;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -45,7 +49,11 @@ public class ReservationList extends AppCompatActivity {
 
                 Log.e("Res:", response.toString());
 
+
+
                 generateDataList(response.body());
+
+
             }
 
             @Override
@@ -92,20 +100,34 @@ public class ReservationList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // 1. Confirm button
+
+                        // Read user id from shared prefs
+                        /*  SharedPreferences  */
+
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        String userStr = sharedPref.getString("user", "ERROR on reading from SharedPrefs");
+
+                        Gson gson = new Gson(); // Or use new GsonBuilder().create();
+                        User user = gson.fromJson(userStr, User.class); // des
+
+                        Log.d("user Id", user.id);
+
+                        /*  ./SharedPreferences  */
+
                         // 2. Request to the server to reserve this date
-                        Reserve reserve = new Reserve(res.getDate(), "lunch", "1");
+                        Reserve reserve = new Reserve(res.getDate(), "lunch", user.id);
 
 
                         /*Create handle for the RetrofitInstance interface*/
                         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                        Call<List<Reservation>> call = service.reserve(res.getDate(), "dinner", "1");
+                        Call<List<Reservation>> call = service.reserve(res.getDate(), "dinner", user.id);
                         call.enqueue(new Callback<List<Reservation>>() {
                             @Override
                             public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
 //                progressDoalog.dismiss();
 
                                 Log.e("Result:", response.toString());
-
+                                recreate();
                                 //generateDataList(response.body());
                             }
 
@@ -143,13 +165,25 @@ public class ReservationList extends AppCompatActivity {
                     public void onClick(View v) {
 
                         // 1. Confirm button
+
+                        // Read user id from shared prefs
+                        /*  SharedPreferences  */
+
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        String userStr = sharedPref.getString("user", "ERROR on reading from SharedPrefs");
+
+                        Gson gson = new Gson(); // Or use new GsonBuilder().create();
+                        User user = gson.fromJson(userStr, User.class); // des
+
+                        Log.d("user Id", user.id);
+
                         // 2. Request to the server to reserve this date
-                        Reserve reserve = new Reserve(res.getDate(), "lunch", "1");
+                        Reserve reserve = new Reserve(res.getDate(), "lunch", user.id);
 
 
                         /*Create handle for the RetrofitInstance interface*/
                         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                        Call<List<Reservation>> call = service.reserve(res.getDate(), "lunch", "1");
+                        Call<List<Reservation>> call = service.reserve(res.getDate(), "lunch", user.id);
                         call.enqueue(new Callback<List<Reservation>>() {
                             @Override
                             public void onResponse(Call<List<Reservation>> call, Response<List<Reservation>> response) {
@@ -158,6 +192,9 @@ public class ReservationList extends AppCompatActivity {
                                 Log.e("Result:", response.toString());
 
                                 //generateDataList(response.body());
+
+                                //Update activity
+                                recreate();
                             }
 
                             @Override

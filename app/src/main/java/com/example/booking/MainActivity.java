@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
 import android.view.View;
@@ -86,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void logout(View v){
+        // Delete all SharedPref
+
+        /*  SharedPreferences  */
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("user");
+        editor.clear();
+        editor.commit();
+        editor.apply();
+        /*  ./SharedPreferences  */
+
+        // Redirect to login page
+        Intent intent = new Intent(getApplicationContext(),Login.class);
+        startActivity(intent);
+
+    }
 
 }
 
