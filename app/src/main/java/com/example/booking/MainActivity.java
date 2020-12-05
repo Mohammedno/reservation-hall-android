@@ -46,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        reserv = (Button) findViewById(R.id.myreservations);
+        reserv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMyReservationsList();
+            }
+        });
+
+
         Log.d("MyTaG", "Hello, World! 9090");
 
 //        progressDoalog.setMessage("Loading....");
@@ -87,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ReservationList.class);
         startActivity(intent);
     }
+
+    private void openMyReservationsList() {
+        Intent intent = new Intent(this, MyReservation.class);
+        startActivity(intent);
+    }
+
+
 
     public void logout(View v){
         // Delete all SharedPref

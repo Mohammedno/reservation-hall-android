@@ -21,9 +21,9 @@
         </activity>
         <activity android:name=".reservations" />
         <activity android:name=".Login" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".MyReservation"/>
 
-        </activity>
     </application>
 
 </manifest>

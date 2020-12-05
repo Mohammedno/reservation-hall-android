@@ -71,7 +71,7 @@ public class ReservationList extends AppCompatActivity {
 
         final TableLayout tableLayout = (TableLayout) findViewById(R.id.reservations_table);
 
-        for(int i = 1; i < reservationList.size(); i++){
+        for(int i = 0; i < reservationList.size(); i++){
 
            final Reservation res = reservationList.get(i);
             Log.d("Date", res.getDate() + " - " + res.getDinner() + " - " + res.getLunch());
