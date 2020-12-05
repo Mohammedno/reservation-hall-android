@@ -2,7 +2,7 @@
     <string name="app_name">Booking</string>
     <string name="signup">SIgn Up</string>
     <string name="fullname">fullname</string>
-    <string name="email">email</string>
+    <string name="email">Phone</string>
     <string name="username">username</string>
     <string name="password">password</string>
     <string name="loginhere">login here</string>
